@@ -1,6 +1,6 @@
 ## Enigma 模擬器
 ### Enigma 模擬器網站連結: https://mocuacqu.github.io/enigma_simulator/
-|||
+|<img src="https://github.com/MocuAcqu/enigma_simulator/blob/main/images/readme/readme1.png">|<img src="https://github.com/MocuAcqu/enigma_simulator/blob/main/images/readme/readme2.png">|
 |:--:|:--:|
 
 在參與台科大一門課程「區塊練與加密貨幣」的期間，老師針對古典密碼學進行了介紹與教學，還帶我們看了2014年的電影《模仿遊戲》，深深的認識了關於 enigma 的歷史背景、原理。
