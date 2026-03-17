@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enigma Machine 復古模擬器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>ENIGMA 模擬器</h1>
+        <nav>
+            <button class="nav-btn active" data-target="page-simulator">模擬器</button>
+            <button class="nav-btn" data-target="page-history">歷史故事</button>
+            <button class="nav-btn" data-target="page-theory">運作原理</button>
+            <button class="nav-btn" data-target="page-codebook">密碼表</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 頁面：模擬器 -->
+        <section id="page-simulator" class="page active">
+            <div class="machine-box">
+                
+                <!-- 轉子區塊 -->
+                <div class="section-container">
+                    <div class="section-title">
+                        WALZEN (轉子) <span class="info-btn" data-info="rotor">?</span>
+                    </div>
+                    <div class="rotors-wrapper">
+                        <!-- 透過 JS 動態生成 3 個轉子 -->
+                        <div id="rotors-container" class="rotors-container"></div>
+                    </div>
+                </div>
+
+                <!-- 燈泡板區塊 -->
+                <div class="section-container">
+                    <div class="section-title">
+                        LAMPENFELD (顯示燈) <span class="info-btn" data-info="lamp">?</span>
+                    </div>
+                    <div id="lightboard" class="board"></div>
+                </div>
+
+                <!-- 鍵盤區塊 -->
+                <div class="section-container">
+                    <div class="section-title">
+                        TASTATUR (鍵盤) <span class="info-btn" data-info="keyboard">?</span>
+                    </div>
+                    <div id="keyboard" class="board"></div>
+                </div>
+
+                <!-- 接線板區塊 -->
+                <div class="section-container">
+                    <div class="section-title">
+                        STECKERBRETT (接線板) <span class="info-btn" data-info="plugboard">?</span>
+                    </div>
+                    <div class="plugboard-instruction">點擊兩個插孔來連接電纜，再次點擊已連接的插孔可拔除。</div>
+                    
+                    <!-- 互動接線板 -->
+                    <div id="visual-plugboard" class="visual-plugboard">
+                        <svg id="cables-layer"></svg> <!-- 用來畫電纜線的透明層 -->
+                        <div id="sockets-container"></div> <!-- 動態生成插孔 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 紙條輸出區 -->
+            <div class="paper-strip-container">
+                <div class="section-title">紙條紀錄 (輸出)</div>
+                <textarea id="paper-strip" readonly placeholder="加密或解密的文字將顯示於此..."></textarea>
+                <div class="strip-controls">
+                    <button id="clear-btn">撕毀紙條 (清除)</button>
+                    <button id="reset-pos-btn">轉子歸位</button>
+                </div>
+                <p style="font-size: 12px; color: darkgrey;">
+                    點擊按鍵時，也可以打開"檢查"查看 console，查看轉換前後的紀錄。
+                </p>
+            </div>
+        </section>
+
+        <!-- 頁面：歷史故事 -->
+        <section id="page-history" class="page">
+            <div class="content-box paper-bg">
+                <h2>恩尼格瑪機的歷史</h2>
+                <p>恩尼格瑪密碼機（Enigma）最初由德國工程師阿瑟·謝爾比烏斯於一戰末期發明，原本目的是用於商業機密通訊。然而在1920年代，德國軍方看中了其複雜的加密能力，將其改裝並廣泛應用於二戰期間的陸、海、空軍通訊。</p>
+                <p>德國人深信恩尼格瑪機是不可破譯的，因為其可能的設定組合高達 <strong>158,962,555,217,826,360,000</strong> 種。然而，波蘭密碼局率先發現了其運作規律，並將研究成果交給了英國。</p>
+                <p>在英國布萊切利園（Bletchley Park），以艾倫·圖靈（Alan Turing）為首的密碼學家們研發出了「炸彈機 (Bombe)」，成功自動化了破譯過程。這項成就據信將二戰縮短了兩年，拯救了數百萬人的生命。</p>
+                <p>我覺得維基百科描述的已經很詳細了~ 所以建議可以直接到維基百科看: <a href="https://zh.wikipedia.org/zh-tw/%E6%81%A9%E5%B0%BC%E6%A0%BC%E7%8E%9B%E5%AF%86%E7%A0%81%E6%9C%BA">恩尼格瑪密碼機</a></p>
+            </div>
+            <div class="theory-image-bottom">
+                <img src="images\Enigma_Machine_at_NSA.jpg" alt="恩尼格瑪機" id="zoomable-img" title="點擊放大查閱">
+                <div class="image-caption" style="color: aliceblue;">
+                    ↑ 恩尼格瑪機，一台德國軍用三旋轉盤恩尼格瑪密碼機的接線板、鍵盤、顯示板和旋轉盤。<br>
+                    <a href="https://zh.wikipedia.org/zh-tw/%E6%81%A9%E5%B0%BC%E6%A0%BC%E7%8E%9B%E5%AF%86%E7%A0%81%E6%9C%BA#/media/File:Enigma_Machine_at_NSA.jpg" target="_blank" style="color:#e9e9e9; font-size: 0.8rem;">參考來源連結</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 頁面：運作原理 -->
+        <section id="page-theory" class="page">
+            <div class="content-box paper-bg">
+                <h2>恩尼格瑪機運作原理</h2>
+                <p>恩尼格瑪機是一種「機電轉子密碼機」，它的加密過程是一條複雜的電流迴路：</p>
+                <ol>
+                    <li><strong>鍵盤：</strong> 按下一個字母鍵（如 'A'），接通電流。</li>
+                    <li><strong>接線板：</strong> 電流首先通過接線板。如果 'A' 和 'Z' 連接，電流會變成 'Z' 進入機器。</li>
+                    <li><strong>轉子（核心）：</strong> 電流穿過三個轉子。每個轉子內部都有錯綜複雜的交叉接線。最重要的是，<strong>每按一次鍵，最右邊的轉子就會轉動一格</strong>。這意味著即使連續按兩次 'A'，也會被加密成完全不同的字母（多表密碼）。</li>
+                    <li><strong>反射器：</strong> 電流到達最左邊後，反射器將電流折返回轉子。這設計確保了 <strong>加密和解密是同一個過程</strong>（如果 A 加密成 K，在相同設定下 K 就會解密成 A），但也導致一個致命弱點：<strong>一個字母永遠不會被加密成它自己</strong>。</li>
+                    <li><strong>反向傳輸與顯示：</strong> 電流反向穿過轉子，再次經過接線板，最後點亮顯示燈泡。</li>
+                </ol>
+            </div>
+
+            <div class="content-box paper-bg">
+                <h2>程式碼機制</h2>
+                <p>恩尼格瑪機的本質是一個複雜的機電迴路。當你按下一個按鍵，電流會跑過一條極度曲折的路徑。以下是本模擬器中，還原歷史硬體邏輯的 JavaScript 核心程式碼：</p>
+                
+                <div class="code-window">
+                    <div class="code-header">enigma_core.js</div>
+                    <pre><code>
+processLetter(char) {
+    // 【步驟 1：機械步進】每按一鍵，最右側轉子轉動一格。
+    // 遇到特定缺口 (Notch) 時，會觸發「雙步進」帶動左側轉子。
+    this.stepRotors(); 
+
+    // 【步驟 2：接線板 (Steckerbrett)】
+    // 檢查字母是否在接線板上有互換 (例如 A 換成 Z)
+    let current = plugboardMap[char] || char;
+
+    // 【步驟 3：正向穿過轉子 (右 -> 中 -> 左)】
+    // 電流根據轉子的內部佈線與當前旋轉角度，改變字母
+    for (let i = 2; i >= 0; i--) {
+        current = this.rotorPass(current, rotors[i], true);
+    }
+
+    // 【步驟 4：反射器 (Umkehrwalze)】
+    // 電流折返。這保證了加密與解密路徑相同，但也導致致命弱點：
+    // 「一個字母永遠不會被加密成自己」。
+    current = this.REFLECTOR[current];
+
+    // 【步驟 5：反向穿過轉子 (左 -> 中 -> 右)】
+    for (let i = 0; i <= 2; i++) {
+        current = this.rotorPass(current, rotors[i], false);
+    }
+
+    // 【步驟 6：再次經過接線板，點亮燈泡】
+    return plugboardMap[current] || current;
+}
+                    </code></pre>
+                </div>
+            </div>
+
+            <!-- 區塊二：第二層加密與歷史協定 -->
+            <div class="content-box paper-bg">
+                <h2>2. 密碼學協定：第二層加密 (The Cryptographic Protocol)</h2>
+                <p>硬體的複雜度只是恩尼格瑪機的一半，另一半的安全來源於德軍嚴格的「操作協定」。如果所有通訊兵一整天都用同一個設定發報，密碼很容易被盟軍透過頻率分析破解。因此，德軍採用了雙重密鑰系統。</p>
+
+                <div class="theory-text-full">
+                    <h3>第一層：每日密鑰 (Tagesschlüssel)</h3>
+                    <p>由最高統帥部分發的密碼本（如底部圖片所示）。全軍每天必須統一設定好<strong>轉子編號、環設定、接線板</strong>。這是機器的「基礎狀態」。</p>
+                    
+                    <h3>第二層：訊息密鑰 (Spruchschlüssel)</h3>
+                    <p>這是為了<strong>每封獨立電報</strong>隨機產生的「一次性密碼 (Session Key)」，操作流程如下：</p>
+                    <ol>
+                        <li>發報員隨便想一個起點 (例如 <code>W E R</code>) 並轉動轉子到此位置。</li>
+                        <li>他再隨機想一個這封電報真正的密鑰 (例如 <code>A S D</code>)。</li>
+                        <li>他在鍵盤上打出 <code>A S D</code>，機器將其加密 (假設亮起 <code>Z X C</code>)。</li>
+                        <li>發報員將轉子轉到真正的密鑰 <code>A S D</code>，開始打機密內文。</li>
+                        <li>最後發送的電碼開頭會是明文的起點與加密後的密鑰：<code>WER ZXC [密文...]</code>。</li>
+                    </ol>
+                    <p class="highlight-text">💡 <strong>歷史的破綻：</strong>在戰爭初期，德軍為了防錯，規定這個密鑰必須「打兩次」(例如輸入 ASD ASD)。正是這個重複的規律，讓波蘭數學家馬里安·雷耶夫斯基 (Marian Rejewski) 找到了破綻，成功推導出早期的機器接線！</p>
+                </div>
+                
+                <!-- 圖片移至下方 -->
+                <div class="theory-image-bottom">
+                    <!-- 給圖片加上 id="zoomable-img" 以便 JS 抓取 -->
+                    <img src="images\number1.jpg" alt="密碼表" id="zoomable-img" title="點擊放大查閱">
+                    <div class="image-caption">
+                        ↑ 真實密碼表<br>
+                        <a href="https://www.cnblogs.com/wgf4242/p/15270600.html" target="_blank" style="color:#5D4037; font-size: 0.8rem;">參考來源連結</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-box paper-bg">
+                <h2>影音推薦 - 機械運作解析</h2>
+                <p>我在查資料的時候看到這一部超級厲害、由 <strong>Jared Owen</strong> 製作的超詳細 3D 動畫解析。影片完美拆解了轉子內部的接線、步進齒輪的連動，以及接線板的實際插拔、通電過程，大大推薦可以這支影片。</p>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/watch?v=ybkkiGtJmkM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
+       
+        </section>
+
+        <!-- 頁面：密碼表 -->
+        <section id="page-codebook" class="page">
+            <div class="content-box paper-bg">
+                <h2>每日密碼表(虛構)</h2>
+                <p>可根據以下表格試著透過不同組合設定機器。在真實情況中，操作員每個月都會收到一張這樣的密碼表，每天必須更換設定。</p>
+                <table class="vintage-table">
+                    <thead>
+                        <tr>
+                            <th>日期 (Tag)</th>
+                            <th>轉子選擇 (Walzenlage)</th>
+                            <th>環設定 (Ringstellung)</th>
+                            <th>接線板 (Steckerverbindungen)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>31</td><td>I  IV III</td><td>08 13 04</td><td>AE BF CM DQ HU JN LX PR SZ VW</td></tr>
+                        <tr><td>30</td><td>IV II  V </td><td>12 02 20</td><td>CX DH EZ FN GQ IO JM KW RY ST</td></tr>
+                        <tr><td>29</td><td>III I  IV</td><td>01 17 22</td><td>AK BJ CG DL EQ FX HZ IN MP OW</td></tr>
+                        <tr><td>28</td><td>V  II  I </td><td>15 04 22</td><td>AT BM CX DR EQ FS GY HZ IW JV</td></tr>
+                        <tr><td>27</td><td>I  V   IV</td><td>09 18 03</td><td>AJ BO CW DZ EK FM GQ HX IY PU</td></tr>
+                        <tr><td>26</td><td>IV I  III</td><td>24 07 16</td><td>AM BN CQ DP EW FZ GS HT IV JY</td></tr>
+                        <tr><td>25</td><td>III IV II</td><td>11 26 05</td><td>AL BW CU DX EQ FV GZ HY IM JS</td></tr>
+                        <tr><td>24</td><td>II III V </td><td>02 14 20</td><td>AK BQ CY DW EU FX GZ HT IM JN</td></tr>
+                        <tr><td>23</td><td>V  IV  I </td><td>19 05 13</td><td>AQ BM CZ DW EX FY GT HI JV KS</td></tr>
+                        <tr><td>22</td><td>I  II  V </td><td>07 23 09</td><td>AF BQ CW DZ EY GV HX IN JU KM</td></tr>
+                        <tr><td>21</td><td>IV V  III</td><td>16 01 25</td><td>AO BY CX DU EW FQ GZ HS IR JV</td></tr>
+                        <tr><td>20</td><td>III I  II</td><td>21 12 04</td><td>AW BM CQ DZ EY FX GT HN IU JV</td></tr>
+                        <tr><td>19</td><td>II V   IV</td><td>06 19 11</td><td>AU BQ CW DX EZ FY GS HI JV KR</td></tr>
+                        <tr><td>18</td><td>V  I  III</td><td>14 08 24</td><td>AL BX CY DQ EW FZ GS HT IM JN</td></tr>
+                        <tr><td>17</td><td>I  III IV</td><td>05 20 17</td><td>AS BQ CW DZ EY FX GV HI JU KM</td></tr>
+                        <tr><td>16</td><td>IV II  I </td><td>22 03 10</td><td>AM BN CQ DP EW FZ GS HY IX JR</td></tr>
+                        <tr><td>15</td><td>III V  II</td><td>08 15 26</td><td>AK BW CY DZ EQ FX GV HT IN JM</td></tr>
+                        <tr><td>14</td><td>II I   V </td><td>17 06 21</td><td>AP BQ CW DX EY FZ GS HT IU JV</td></tr>
+                        <tr><td>13</td><td>V  III I </td><td>04 24 12</td><td>AL BW CY DX EQ FZ GV HS IN JM</td></tr>
+                        <tr><td>12</td><td>I  IV  II</td><td>13 09 25</td><td>AO BQ CW DZ EY FX GT HS IU JR</td></tr>
+                        <tr><td>11</td><td>IV III V </td><td>25 18 07</td><td>AK BM CQ DW EZ FY GS HX IV JU</td></tr>
+                        <tr><td>10</td><td>III II I </td><td>02 11 19</td><td>AN BQ CW DX EY FZ GS HT IU JV</td></tr>
+                        <tr><td>09</td><td>II V  III</td><td>18 05 14</td><td>AM BY CX DW EQ FZ GS HT IU JV</td></tr>
+                        <tr><td>08</td><td>V  IV  II</td><td>09 22 01</td><td>AL BW CQ DZ EY FX GT HS IN JM</td></tr>
+                        <tr><td>07</td><td>I  V  III</td><td>26 14 06</td><td>AK BQ CY DW EX FZ GV HS IU JR</td></tr>
+                        <tr><td>06</td><td>IV I   II</td><td>07 10 23</td><td>AO BM CW DX EY FZ GS HT IU JV</td></tr>
+                        <tr><td>05</td><td>III IV I </td><td>12 21 08</td><td>AN BQ CX DW EZ FY GV HS IM JR</td></tr>
+                        <tr><td>04</td><td>II III V </td><td>20 02 15</td><td>AL BW CY DX EQ FZ GS HT IU JV</td></tr>
+                        <tr><td>03</td><td>V  II  IV</td><td>01 17 24</td><td>AK BM CQ DW EX FY GZ HS IN JR</td></tr>
+                        <tr><td>02</td><td>I  III V </td><td>15 08 19</td><td>AO BQ CW DZ EY FX GT HU IV JM</td></tr>
+                        <tr><td>01</td><td>IV V   I </td><td>23 13 04</td><td>AM BW CY DX EQ FZ GS HT IU JV</td></tr>
+                    </tbody>
+                </table>
+                <p><em>註：操作員設定好上述機關後，會自己隨機挑選三個字母（例如 QWE）作為該封電報的初始轉子位置 (Grundstellung)，並寫在電文開頭。</em></p>
+            </div>
+        </section>
+
+         <div id="image-modal" class="image-modal">
+            <span class="img-close-btn">&times;</span>
+            <img class="image-modal-content" id="enlarged-img">
+            <div id="img-caption"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>ENIGMA MACHINE SIMULATOR</p>
+            <p class="copyright">Designed & Coded by <strong>@MocuAcqu</strong> © 2026</p>
+        </div>
+    </footer>
+
+    <!-- Info 彈跳視窗 (Modal) -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title">標題</h3>
+            <p id="modal-text">內容</p>
+        </div>
+    </div>
+
+    <script src="enigma.js"></script>
+</body>
+</html>

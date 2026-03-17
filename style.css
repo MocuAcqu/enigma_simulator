@@ -1,0 +1,624 @@
+:root {
+    --bg-color: #120C0A;
+    --wood-dark: #3E2723;
+    --wood-light: #5D4037;
+    --brass: #FBC02D;
+    --brass-dark: #F57F17;
+    --key-bg: #212121;
+    --key-border: #9E9E9E;
+    --text-light: #ECEFF1;
+    --paper-bg: #F5F0E6;
+    --paper-text: #2C1E16;
+    --bulb-off: rgba(255, 255, 255, 0.2);
+    --bulb-on: #FFD54F;
+    --bulb-glow: #FFCA28;
+    --accent-color: #D84315;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+}
+
+code, pre, .machine-box, .vintage-table, textarea {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* 導覽列 */
+header {
+    background-color: var(--wood-dark);
+    text-align: center;
+    padding: 1rem;
+    border-bottom: 3px solid var(--brass-dark);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+h2 {
+    color: var(--wood-dark);
+    font-size: 1.8rem;
+    border-bottom: 3px solid var(--brass);
+    padding-bottom: 8px;
+    margin-bottom: 25px;
+    margin-top: 0;
+}
+
+h3 {
+    color: var(--accent-color);
+    font-size: 1.3rem;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+header h1 { margin: 0 0 10px 0; color: var(--brass); letter-spacing: 2px; }
+
+nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+.nav-btn {
+    background: transparent;
+    border: 1px solid var(--brass);
+    color: var(--brass);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.nav-btn.active, .nav-btn:hover {
+    background: var(--brass);
+    color: var(--wood-dark);
+}
+
+/* 頁面切換 */
+.page { display: none; padding: 20px; max-width: 900px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* 機器本體 */
+.machine-box {
+    background: linear-gradient(145deg, var(--wood-light), var(--wood-dark));
+    border: 5px solid #2a1b15;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.section-container {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #4E342E;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.section-title {
+    color: var(--brass);
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--brass-dark);
+    padding-bottom: 5px;
+}
+
+/* Info 按鈕 */
+.info-btn {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: var(--brass);
+    color: var(--wood-dark);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+.info-btn:hover { background: #FFF59D; }
+
+/* 轉子區域 (Walzen) */
+.rotors-wrapper { display: flex; justify-content: center; }
+.rotors-container { display: flex; gap: 30px; }
+
+.rotor {
+    background: linear-gradient(145deg, #4E342E, #3E2723);
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #2a1b15;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.rotor-label {
+    font-size: 16px;
+    color: var(--brass);
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.rotor input {
+    background: #e0e0e0; color: #000; border: none; font-family: monospace; width: 50px; text-align: center;
+}
+
+.rotor-select {
+    background: #E0E0E0;
+    color: #000;
+    border: 2px solid #8D6E63;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: bold;
+    width: 60px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.rotor-window {
+    width: 40px; height: 50px;
+    background: #fff; color: #000;
+    font-size: 24px; font-weight: bold;
+    display: flex; justify-content: center; align-items: center;
+    border: inset 3px #888;
+    box-shadow: inset 0 5px 10px rgba(0,0,0,0.5);
+}
+
+.rotor-btn {
+    background: var(--key-bg); border: 1px solid var(--key-border); color: white;
+    width: 40px; height: 25px; cursor: pointer; font-size: 12px;
+}
+.rotor-btn:active { background: #000; }
+
+/* 鍵盤與燈泡共用 */
+.board {
+    display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px;
+}
+.board-row { display: flex; justify-content: center; gap: 10px; }
+
+/* 燈泡 (Lampenfeld) */
+.light {
+    width: 35px; height: 35px; border-radius: 50%;
+    background: var(--bulb-off); border: 2px solid rgba(255,255,255,0.1);
+    display: flex; justify-content: center; align-items: center;
+    color: rgba(255,255,255,0.3); font-size: 18px; font-weight: bold;
+    transition: all 0.1s;
+}
+.light.on {
+    background: var(--bulb-on); color: #000; border-color: #fff;
+    box-shadow: 0 0 20px 5px var(--bulb-glow), inset 0 0 10px #fff;
+    text-shadow: 0 0 5px #fff;
+}
+
+/* 鍵盤 (Tastatur) */
+.key {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: radial-gradient(circle, var(--key-border) 0%, var(--key-bg) 20%);
+    border: 2px solid #555; color: white; font-size: 18px; font-weight: bold;
+    cursor: pointer; box-shadow: 0 4px 5px rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center;
+    transition: transform 0.1s, box-shadow 0.1s;
+    user-select: none;
+}
+.key:active, .key.active {
+    transform: translateY(4px); box-shadow: 0 0 2px rgba(0,0,0,0.8); background: #111;
+}
+
+/* 接線板 (Steckerbrett) */
+.plugboard-instruction {
+    text-align: center;
+    font-size: 12px;
+    color: #B0BEC5;
+    margin-bottom: 15px;
+}
+
+.visual-plugboard {
+    background: #37474F; /* 金屬鐵灰色 */
+    border: 3px inset #263238;
+    border-radius: 5px;
+    padding: 20px 10px;
+    position: relative;
+    box-shadow: inset 0 10px 20px rgba(0,0,0,0.5);
+    margin: 0 auto;
+    width: 90%;
+    min-height: 230px;
+}
+
+/* SVG 電纜層，必須蓋在上方且不能阻擋點擊 */
+#cables-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* 讓滑鼠點擊穿透到下方的插孔 */
+    z-index: 10;
+}
+
+#sockets-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.socket-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.socket-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.socket-label {
+    font-size: 14px;
+    color: #ECEFF1;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000;
+}
+
+/* 插孔外觀 */
+.socket {
+    width: 24px;
+    height: 24px;
+    background: #111;
+    border: 2px solid #78909C;
+    border-radius: 50%;
+    box-shadow: inset 0 3px 5px rgba(0,0,0,0.8), 0 1px 1px rgba(255,255,255,0.3);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.socket:hover {
+    border-color: var(--brass);
+}
+
+/* 選取狀態（等待插第二個孔） */
+.socket.selected {
+    border-color: var(--bulb-on);
+    box-shadow: 0 0 10px var(--bulb-on), inset 0 3px 5px rgba(0,0,0,0.8);
+}
+
+/* 已插入插頭的狀態 */
+.socket.plugged::after {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; width: 24px; height: 24px;
+    background: #212121; /* 黑色插頭 */
+    border: 2px solid #000;
+    border-radius: 50%;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.8);
+}
+/* 紙條區 */
+.paper-strip-container { margin-top: 20px; }
+#paper-strip {
+    width: 100%; height: 80px; background: var(--paper-bg); color: var(--paper-text);
+    font-family: 'Courier New', Courier, monospace; font-size: 18px; font-weight: bold;
+    border: none; padding: 10px; box-sizing: border-box; resize: none;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2); letter-spacing: 2px; line-height: 1.5;
+}
+.strip-controls { display: flex; gap: 10px; margin-top: 10px; }
+.strip-controls button {
+    padding: 8px 15px; background: var(--brass-dark); border: none; font-weight: bold; cursor: pointer;
+}
+
+/* 文字內容區塊 (歷史、原理) */
+.content-box {
+    border-radius: 8px;
+    padding: 40px; 
+    margin-top: 30px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"); /* 加入極微弱的紙張紋理 */
+}
+
+.content-box p {
+    margin-bottom: 20px;
+    font-size: 1.05rem;
+    color: var(--paper-text);
+}
+
+.paper-bg { background: var(--paper-bg); color: var(--paper-text); }
+.vintage-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.vintage-table th, .vintage-table td { border: 1px solid var(--wood-dark); padding: 10px; text-align: center; }
+.vintage-table th { background: var(--wood-light); color: white; }
+
+/* 彈跳視窗 Modal */
+.modal {
+    display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center;
+}
+.modal.show { display: flex; }
+.modal-content {
+    background: var(--paper-bg); color: var(--paper-text); padding: 20px 30px;
+    border-radius: 5px; width: 80%; max-width: 500px; border: 3px solid var(--wood-dark);
+    position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+.close-btn {
+    position: absolute; right: 15px; top: 10px; font-size: 24px; font-weight: bold; cursor: pointer;
+}
+
+/* 程式碼區塊風格 */
+.code-window {
+    background-color: #1e1e1e;
+    border: 2px solid #546E7A;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.code-header {
+    background-color: #37474F;
+    color: #B0BEC5;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-family: sans-serif;
+    border-bottom: 1px solid #263238;
+}
+
+.code-window pre {
+    margin: 0;
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.code-window code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    color: #A5D6A7; /* 復古終端機綠色 */
+    line-height: 1.5;
+}
+
+/* 註解的顏色 */
+.code-window code span.comment {
+    color: #78909C;
+}
+
+/* 歷史協定圖文並排佈局 */
+.theory-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.theory-text {
+    flex: 1;
+    min-width: 300px;
+}
+
+.theory-text h3 {
+    color: var(--wood-dark);
+    border-bottom: 2px solid var(--brass);
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+
+.theory-text ol {
+    background: rgba(255, 255, 255, 0.4);
+    padding: 15px 15px 15px 35px;
+    border-radius: 5px;
+    border-left: 4px solid var(--wood-light);
+}
+
+.theory-text li {
+    margin-bottom: 8px;
+}
+
+.highlight-text {
+    background-color: #FFF9C4;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px dashed #FBC02D;
+    color: #3E2723;
+    font-size: 0.95rem;
+}
+
+/* 圖片區塊 */
+.theory-image {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.theory-image img {
+    max-width: 100%;
+    height: auto;
+    border: 5px solid #fff; /* 拍立得/相片白邊效果 */
+    box-shadow: 2px 5px 15px rgba(0,0,0,0.4);
+    transform: rotate(2deg); /* 微微傾斜更有歷史檔案的感覺 */
+    transition: transform 0.3s ease;
+}
+
+.theory-image img:hover {
+    transform: rotate(0deg) scale(1.05); /* 滑鼠游標停在上面時會放大擺正 */
+}
+
+.image-caption {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #5D4037;
+    text-align: center;
+    font-style: italic;
+    background: rgba(255,255,255,0.5);
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.theory-text-full {
+    width: 100%;
+}
+.theory-text-full h3 {
+    color: var(--wood-dark);
+    border-bottom: 2px solid var(--brass);
+    padding-bottom: 5px;
+    margin-top: 20px;
+}
+.theory-text-full ol {
+    background: rgba(255, 255, 255, 0.4);
+    padding: 15px 15px 15px 35px;
+    border-radius: 5px;
+    border-left: 4px solid var(--wood-light);
+}
+
+/* 底部圖片樣式 */
+.theory-image-bottom {
+    margin-top: 30px;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px dashed #BCAAA4;
+}
+
+.theory-image-bottom img {
+    max-width: 90%;
+    height: auto;
+    border: 5px solid #fff;
+    box-shadow: 2px 5px 15px rgba(0,0,0,0.4);
+    cursor: zoom-in; /* 滑鼠移過去變成放大鏡圖示 */
+    transition: transform 0.2s ease;
+}
+
+.theory-image-bottom img:hover {
+    transform: scale(1.02); /* 微微放大暗示可點擊 */
+}
+
+/* YouTube 影片響應式容器 (完美 16:9 比例) */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 比例的魔法數字 */
+    height: 0;
+    overflow: hidden;
+    margin-top: 20px;
+    border: 3px solid var(--wood-dark);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    background: #000;
+}
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- 圖片點擊放大視窗 (Lightbox) --- */
+.image-modal {
+    display: none; /* 預設隱藏 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.image-modal.show {
+    display: flex; /* 觸發顯示 */
+}
+
+.image-modal-content {
+    max-width: 95%;
+    max-height: 85vh;
+    border: 3px solid #fff;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    object-fit: contain;
+}
+
+#img-caption {
+    color: #ccc;
+    font-size: 1.2rem;
+    margin-top: 15px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.img-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.img-close-btn:hover {
+    color: var(--brass);
+}
+
+.ring-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0,0,0,0.2);
+    padding: 5px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.ring-control label {
+    font-size: 12px;
+    color: #BCAAA4;
+}
+
+.ring-control input {
+    background: #E0E0E0;
+    border: 1px solid #795548;
+    border-radius: 3px;
+    width: 40px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* --- Footer 樣式 --- */
+footer {
+    background-color: #0A0706; /* 比背景更黑，作為收尾 */
+    border-top: 2px solid var(--brass-dark);
+    padding: 30px 20px;
+    margin-top: 60px;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.footer-content p {
+    margin: 5px 0;
+    font-family: 'Courier New', Courier, monospace;
+    color: #78909C;
+    letter-spacing: 2px;
+}
+
+.copyright {
+    font-size: 0.9rem;
+    color: #B0BEC5 !important;
+}
+
+.copyright strong {
+    color: var(--brass); /* 凸顯你的名字 */
+    font-size: 1.1rem;
+    text-shadow: 0 0 5px rgba(251, 192, 45, 0.3);
+}
